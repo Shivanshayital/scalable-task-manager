@@ -2,7 +2,18 @@ import { NextRequest } from "next/server";
 import { authenticateRequest } from "@/lib/auth";
 import { handleApiError, sendSuccess, ApiError } from "@/utils/apiResponse";
 import { createTaskSchema } from "@/validators/task";
-import { createTaskForUser } from "@/services/task.service";
+import { createTaskForUser, listTasksForUser } from "@/services/task.service";
+
+export async function GET(request: NextRequest) {
+  try {
+    const auth = authenticateRequest(request);
+    const tasks = await listTasksForUser(auth);
+
+    return sendSuccess(200, { tasks });
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {
