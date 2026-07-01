@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useEffect } from "react";
-import { useForm, type FieldErrors, type Resolver } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { z } from "zod";
 import { registerSchema } from "@/validators/auth";
@@ -12,36 +13,6 @@ import { Input } from "@/components/ui/input";
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
-const registerResolver: Resolver<RegisterFormValues> = async (values) => {
-  const result = await registerSchema.safeParseAsync(values);
-
-  if (result.success) {
-    return {
-      values: result.data,
-      errors: {},
-    };
-  }
-
-  const errors = result.error.issues.reduce<FieldErrors<RegisterFormValues>>((fieldErrors, issue) => {
-    const field = issue.path[0] as keyof RegisterFormValues | undefined;
-    if (!field || fieldErrors[field]) {
-      return fieldErrors;
-    }
-
-    fieldErrors[field] = {
-      type: issue.code,
-      message: issue.message,
-    };
-
-    return fieldErrors;
-  }, {});
-
-  return {
-    values: {},
-    errors,
-  };
-};
-
 export default function RegisterPage() {
   const { isAuthenticated, register: registerUser, loading } = useAuth();
   const {
@@ -49,7 +20,7 @@ export default function RegisterPage() {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<RegisterFormValues>({
-    resolver: registerResolver,
+    resolver: zodResolver(registerSchema),
   });
 
   useEffect(() => {
