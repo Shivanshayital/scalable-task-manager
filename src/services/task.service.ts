@@ -1,5 +1,5 @@
-import { createTask, findAllTasks, findTaskById, findTasksForUser } from "@/repositories/task.repository";
-import type { CreateTaskInput } from "@/validators/task";
+import { createTask, findAllTasks, findTaskById, findTasksForUser, updateTask } from "@/repositories/task.repository";
+import type { CreateTaskInput, UpdateTaskInput } from "@/validators/task";
 import { ApiError } from "@/utils/apiResponse";
 import type { AuthPayload } from "@/lib/auth";
 
@@ -42,4 +42,21 @@ export async function getTaskByIdForUser(taskId: string, payload: AuthPayload) {
   }
 
   return task;
+}
+
+export async function updateTaskForUser(taskId: string, payload: AuthPayload, input: UpdateTaskInput) {
+  const task = await findTaskById(taskId);
+
+  if (!task) {
+    throw new ApiError(404, "Task not found");
+  }
+
+  if (payload.role !== "ADMIN" && task.userId !== payload.sub) {
+    throw new ApiError(404, "Task not found");
+  }
+
+  return updateTask(taskId, {
+    title: input.title,
+    description: input.description,
+  });
 }
