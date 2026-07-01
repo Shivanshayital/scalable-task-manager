@@ -177,21 +177,28 @@ The Swagger UI includes request/response schemas, authentication details, and st
 - Add analytics and reporting dashboards
 - Improve deployment and CI/CD pipeline configuration
 
-## Screenshots Placeholder
+## Screenshots
 
-Add project screenshots here as the UI evolves:
+### Login Page
+![Login Page](./login-page.png)
 
-- Landing / auth experience
-- Dashboard with task management views
-- Swagger documentation screen
+### Register Page
+![Register Page](./register-page.png)
 
-Example structure:
+### Dashboard
+![Dashboard](./dashboard.png)
 
-```text
-docs/screenshots/auth.png
-docs/screenshots/dashboard.png
-docs/screenshots/swagger.png
-```
+### Create Task
+![Create Task](./create-task.png)
+
+### Task Management
+![Task Management](./tasks.png)
+
+### Swagger API Documentation
+![Swagger](./swagger.png)
+
+### Dark Mode
+![Dark Mode](./dark-mode.png)
 
 ## License
 
