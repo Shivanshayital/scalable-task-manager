@@ -180,25 +180,25 @@ The Swagger UI includes request/response schemas, authentication details, and st
 ## Screenshots
 
 ### Login Page
-![Login Page](./login-page.png)
+![Login Page](./assets/login-page.png)
 
 ### Register Page
-![Register Page](./register-page.png)
+![Register Page](./assets/register-page.png)
 
 ### Dashboard
-![Dashboard](./dashboard.png)
+![Dashboard](./assets/dashboard.png)
 
 ### Create Task
-![Create Task](./create-task.png)
+![Create Task](./assets/create-task.png)
 
 ### Task Management
-![Task Management](./tasks.png)
+![Task Management](./assets/tasks.png)
 
 ### Swagger API Documentation
-![Swagger](./swagger.png)
+![Swagger](./assets/swagger.png)
 
 ### Dark Mode
-![Dark Mode](./dark-mode.png)
+![Dark Mode](./assets/dark-mode.png)
 
 ## License
 
