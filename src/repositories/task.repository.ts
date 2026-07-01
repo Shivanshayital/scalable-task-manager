@@ -9,6 +9,10 @@ export async function updateTask(taskId: string, data: Prisma.TaskUpdateInput) {
   return prisma.task.update({ where: { id: taskId }, data });
 }
 
+export async function deleteTask(taskId: string) {
+  return prisma.task.delete({ where: { id: taskId } });
+}
+
 export async function findTasksForUser(userId: string) {
   return prisma.task.findMany({ where: { userId } });
 }

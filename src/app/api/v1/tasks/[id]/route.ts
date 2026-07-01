@@ -1,7 +1,7 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { authenticateRequest } from "@/lib/auth";
 import { handleApiError, sendSuccess, ApiError } from "@/utils/apiResponse";
-import { getTaskByIdForUser, updateTaskForUser } from "@/services/task.service";
+import { deleteTaskForUser, getTaskByIdForUser, updateTaskForUser } from "@/services/task.service";
 import { updateTaskSchema } from "@/validators/task";
 
 export async function GET(
@@ -43,6 +43,21 @@ export async function PUT(
     const task = await updateTaskForUser(resolvedParams.id, auth, parsed.data);
 
     return sendSuccess(200, task);
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  try {
+    const auth = authenticateRequest(request);
+    const resolvedParams = await params;
+
+    await deleteTaskForUser(resolvedParams.id, auth);
+    return new NextResponse(null, { status: 204 });
   } catch (error) {
     return handleApiError(error);
   }
