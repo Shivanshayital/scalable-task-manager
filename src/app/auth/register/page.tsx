@@ -2,16 +2,45 @@
 
 import Link from "next/link";
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, type FieldErrors, type Resolver } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { registerSchema } from "@/validators/auth";
 import { useAuth } from "@/hooks/useAuth";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
+
+const registerResolver: Resolver<RegisterFormValues> = async (values) => {
+  const result = await registerSchema.safeParseAsync(values);
+
+  if (result.success) {
+    return {
+      values: result.data,
+      errors: {},
+    };
+  }
+
+  const errors = result.error.issues.reduce<FieldErrors<RegisterFormValues>>((fieldErrors, issue) => {
+    const field = issue.path[0] as keyof RegisterFormValues | undefined;
+    if (!field || fieldErrors[field]) {
+      return fieldErrors;
+    }
+
+    fieldErrors[field] = {
+      type: issue.code,
+      message: issue.message,
+    };
+
+    return fieldErrors;
+  }, {});
+
+  return {
+    values: {},
+    errors,
+  };
+};
 
 export default function RegisterPage() {
   const { isAuthenticated, register: registerUser, loading } = useAuth();
@@ -20,7 +49,7 @@ export default function RegisterPage() {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<RegisterFormValues>({
-    resolver: zodResolver(registerSchema),
+    resolver: registerResolver,
   });
 
   useEffect(() => {
@@ -66,9 +95,9 @@ export default function RegisterPage() {
             {errors.password ? <p className="text-sm text-destructive">{errors.password.message}</p> : null}
           </div>
 
-          <Button type="submit" disabled={isSubmitting || loading} className="w-full">
+          <button type="submit" disabled={isSubmitting || loading} className={buttonVariants({ className: "w-full" })}>
             {isSubmitting ? "Creating account..." : "Create account"}
-          </Button>
+          </button>
         </form>
 
         <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
