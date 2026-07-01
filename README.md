@@ -1,43 +1,198 @@
 # Scalable Task Manager
 
-A production-ready architecture scaffold for a task management application built with Next.js, TypeScript, Tailwind CSS, shadcn/ui, Prisma, and PostgreSQL.
+Scalable Task Manager is a production-style full-stack task management application built with Next.js, TypeScript, Prisma, PostgreSQL, and a polished SaaS-inspired frontend. It demonstrates a clean architecture for authentication, authorization, task CRUD operations, and API documentation in a portfolio-ready project.
 
-## Stage 2 scope
+## Project Overview
 
-This repository now includes the database design and Prisma configuration for the task manager application:
+This project combines a robust backend API with a modern user interface to deliver a complete task management experience. The application supports user registration and login, role-based access control, secure task creation and management, and interactive Swagger documentation for all REST endpoints.
 
-- PostgreSQL datasource configuration
-- Prisma schema with User and Task models
-- Role and task status enums
-- Prisma relation from User to Task
-- Seed script for an initial administrator user
+## Features
 
-## Database setup
+- Secure authentication with JWT and bcrypt
+- Role-based authorization for admin and regular users
+- Task CRUD operations with ownership enforcement
+- Premium-looking dashboard UI with responsive layout
+- OpenAPI/Swagger documentation at /api/docs
+- Prisma-powered PostgreSQL persistence
+- Clean service and repository layer for maintainable backend logic
 
-1. Copy .env.example to .env.local if needed.
-2. Set a valid PostgreSQL connection string in DATABASE_URL.
-3. Run the Prisma migration workflow below.
+## Tech Stack
 
-## Migration commands
+- Frontend: Next.js 16, React 19, TypeScript, Tailwind CSS
+- UI: shadcn/ui-inspired components, Framer Motion, Lucide React
+- Backend: Next.js Route Handlers, Zod validation, JWT, bcryptjs
+- Data Layer: Prisma ORM, PostgreSQL
+- Documentation: Swagger UI / OpenAPI
 
-```bash
-npx prisma generate
-npx prisma migrate dev --name init_database
+## Architecture
+
+The application follows a modular architecture:
+
+- App Router for page and API route organization
+- Route handlers for REST endpoints under src/app/api/v1
+- Service layer for business logic
+- Repository layer for database access
+- Shared validation and response utilities
+- Client-side services and hooks for the frontend experience
+
+## Folder Structure
+
+```text
+src/
+  app/
+    api/
+      v1/
+        auth/
+        tasks/
+        users/
+      docs/
+    auth/
+    dashboard/
+  components/
+    auth/
+    layout/
+    ui/
+  hooks/
+  lib/
+  repositories/
+  services/
+  types/
+  validators/
+  utils/
+prisma/
+  schema.prisma
+  seed.ts
 ```
 
-## Seed command
+## API Endpoints
 
-```bash
-npx prisma db seed
-```
+### Authentication
 
-This creates or updates the Administrator user with the seeded credentials.
+- POST /api/v1/auth/register
+- POST /api/v1/auth/login
 
-## Getting started
+### Users
+
+- GET /api/v1/users (Admin only)
+
+### Tasks
+
+- GET /api/v1/tasks
+- POST /api/v1/tasks
+- GET /api/v1/tasks/[id]
+- PUT /api/v1/tasks/[id]
+- DELETE /api/v1/tasks/[id]
+
+### Documentation
+
+- GET /api/docs
+- GET /api/docs/openapi.json
+
+## Authentication Flow
+
+1. A user registers with name, email, and password.
+2. The password is hashed before being persisted.
+3. The user logs in with email and password.
+4. The server validates credentials and issues a JWT.
+5. Subsequent requests include the token in the Authorization header as a Bearer token.
+6. Protected endpoints verify the token and enforce role-based authorization.
+
+## Database Schema
+
+The database uses Prisma with PostgreSQL and includes:
+
+- User
+  - id
+  - name
+  - email
+  - password
+  - role (USER or ADMIN)
+  - createdAt / updatedAt
+- Task
+  - id
+  - title
+  - description
+  - status (PENDING, IN_PROGRESS, COMPLETED)
+  - userId
+  - createdAt / updatedAt
+
+Relationships:
+
+- One user can own many tasks.
+- Each task belongs to exactly one user.
+
+## Installation
+
+1. Clone the repository
+2. Install dependencies:
 
 ```bash
 npm install
+```
+
+3. Create your environment file:
+
+```bash
+cp .env.example .env.local
+```
+
+4. Configure PostgreSQL and set the required environment variables.
+
+## Environment Variables
+
+| Variable | Description |
+| --- | --- |
+| DATABASE_URL | PostgreSQL connection string |
+| JWT_SECRET | Secret used to sign JWTs |
+| NEXT_PUBLIC_APP_NAME | Optional app display name |
+
+## Running Locally
+
+Start the development server:
+
+```bash
 npm run dev
 ```
 
-Open http://localhost:3000 to view the application shell.
+Then open:
+
+- http://localhost:3000
+- http://localhost:3000/api/docs
+
+## Swagger Documentation
+
+Interactive API documentation is available at:
+
+- /api/docs
+- /api/docs/openapi.json
+
+The Swagger UI includes request/response schemas, authentication details, and status code descriptions for the existing REST endpoints.
+
+## Future Improvements
+
+- Add automated unit and integration tests
+- Introduce refresh token support
+- Add pagination and filtering for tasks
+- Support file attachments or labels
+- Add analytics and reporting dashboards
+- Improve deployment and CI/CD pipeline configuration
+
+## Screenshots Placeholder
+
+Add project screenshots here as the UI evolves:
+
+- Landing / auth experience
+- Dashboard with task management views
+- Swagger documentation screen
+
+Example structure:
+
+```text
+docs/screenshots/auth.png
+docs/screenshots/dashboard.png
+docs/screenshots/swagger.png
+```
+
+## License
+
+This project is intended for educational and portfolio purposes.
