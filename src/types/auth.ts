@@ -1,0 +1,15 @@
+export type UserRole = "USER" | "ADMIN";
+
+export type User = {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type AuthResponse = {
+  token: string;
+  user: User;
+};
